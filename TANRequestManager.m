@@ -53,18 +53,23 @@ NSString *kLyftAPIVersion = @"v1";
                               @"lng" : @(location.longitude) };
     
     [self GET:URL parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSArray *productsJSON = responseObject[@"ride_types"];
+        NSAssert([responseObject isKindOfClass:[NSDictionary class]], @"Response object must be of type NSDictionary");
         
-        NSMutableArray *products __block = [[NSMutableArray alloc] init];
-        [productsJSON enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            NSError *error = nil;
-            TANProduct *product = [MTLJSONAdapter modelOfClass:TANProduct.class fromJSONDictionary:obj error:&error];
-            if (!error && product) {
-                [products addObject:product];
-            }
-        }];
-        NSArray *result = [products copy];
-        success(result);
+        if ([responseObject isKindOfClass:[NSDictionary class]] &&
+            
+            [responseObject[@"cost_estimates"] isKindOfClass:[NSArray class]]){
+            NSArray *productsJSON = responseObject[@"ride_types"];
+            __block NSMutableArray *products = [[NSMutableArray alloc] init];
+            [productsJSON enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                NSError *error = nil;
+                TANProduct *product = [MTLJSONAdapter modelOfClass:TANProduct.class fromJSONDictionary:obj error:&error];
+                if (!error && product) {
+                    [products addObject:product];
+                }
+            }];
+            NSArray *result = [products copy];
+            success(result);
+        }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         failure(error);
@@ -88,18 +93,23 @@ NSString *kLyftAPIVersion = @"v1";
                               @"end_lng"   : @(endLocation.longitude) };
     
     [self GET:URL parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSArray *priceEstimatesJSON = responseObject[@"cost_estimates"];
         
-        NSMutableArray *priceEstimates __block = [[NSMutableArray alloc] init];
-        [priceEstimatesJSON enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            NSError *error = nil;
-            TANPriceEstimate *priceEstimate = [MTLJSONAdapter modelOfClass:TANPriceEstimate.class fromJSONDictionary:obj error:&error];
-            if (!error && priceEstimate) {
-                [priceEstimates addObject:priceEstimate];
-            }
-        }];
-        NSArray *result = [priceEstimates copy];
-        success(result);
+        NSAssert([responseObject isKindOfClass:[NSDictionary class]], @"Response object must be of type NSDictionary");
+        
+        if ([responseObject isKindOfClass:[NSDictionary class]] &&
+            [responseObject[@"cost_estimates"] isKindOfClass:[NSArray class]]){
+            NSArray *priceEstimatesJSON = responseObject[@"cost_estimates"];
+            __block NSMutableArray *priceEstimates = [[NSMutableArray alloc] init];
+            [priceEstimatesJSON enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                NSError *error = nil;
+                TANPriceEstimate *priceEstimate = [MTLJSONAdapter modelOfClass:TANPriceEstimate.class fromJSONDictionary:obj error:&error];
+                if (!error && priceEstimate) {
+                    [priceEstimates addObject:priceEstimate];
+                }
+            }];
+            NSArray *result = [priceEstimates copy];
+            success(result);
+        }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         failure(error);
@@ -122,18 +132,23 @@ NSString *kLyftAPIVersion = @"v1";
                                      @"lng" : @(startLocation.longitude) }.mutableCopy;
     
     [self GET:URL parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSArray *timeEstimatesJSON = responseObject[@"eta_estimates"];
         
-        NSMutableArray *timeEstimates __block = [[NSMutableArray alloc] init];
-        [timeEstimatesJSON enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            NSError *error = nil;
-            TANTimeEstimate *timeEstimate = [MTLJSONAdapter modelOfClass:TANTimeEstimate.class fromJSONDictionary:obj error:&error];
-            if (!error && timeEstimate) {
-                [timeEstimates addObject:timeEstimate];
-            }
-        }];
-        NSArray *result = [timeEstimates copy];
-        success(result);
+        NSAssert([responseObject isKindOfClass:[NSDictionary class]], @"Response object must be of type NSDictionary");
+        
+        if ([responseObject isKindOfClass:[NSDictionary class]] &&
+            [responseObject[@"eta_estimates"] isKindOfClass:[NSArray class]]){
+            NSArray *timeEstimatesJSON = responseObject[@"eta_estimates"];
+            __block NSMutableArray *timeEstimates = [[NSMutableArray alloc] init];
+            [timeEstimatesJSON enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                NSError *error = nil;
+                TANTimeEstimate *timeEstimate = [MTLJSONAdapter modelOfClass:TANTimeEstimate.class fromJSONDictionary:obj error:&error];
+                if (!error && timeEstimate) {
+                    [timeEstimates addObject:timeEstimate];
+                }
+            }];
+            NSArray *result = [timeEstimates copy];
+            success(result);
+        }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         failure(error);
