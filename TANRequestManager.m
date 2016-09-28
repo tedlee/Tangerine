@@ -11,7 +11,7 @@
 #import "TANPriceEstimate.h"
 #import "TANTimeEstimate.h"
 
-NSString *kLyftURL = @"https://partner-api.lyft.com";
+NSString *kLyftURL = @"https://api.lyft.com";
 NSString *kLyftAPIVersion = @"v1";
 
 @implementation TANRequestManager
